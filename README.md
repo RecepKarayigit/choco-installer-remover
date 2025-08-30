@@ -1,4 +1,4 @@
-# Chocolatey Installer & Manager Scripts
+# Chocolatey Package Manager
 
 A set of PowerShell scripts to **install/remove Chocolatey**, **manage installed programs**, and **install standard programs** on Windows. Includes export/import functionality for Chocolatey packages.
 
