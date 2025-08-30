@@ -1,6 +1,6 @@
-# Chocolatey Installer & Remover Script
+# Chocolatey Installer & Manager Scripts
 
-A PowerShell script to **install or remove Chocolatey** on Windows. It handles environment variables, restores modified profiles, and ensures proper permissions. Designed for ease of use with clear feedback messages.
+A set of PowerShell scripts to **install/remove Chocolatey**, **manage installed programs**, and **install standard programs** on Windows. Includes export/import functionality for Chocolatey packages.
 
 ---
 
@@ -11,6 +11,7 @@ A PowerShell script to **install or remove Chocolatey** on Windows. It handles e
 - [Installation](#installation)  
 - [Usage](#usage)  
 - [Functions](#functions)  
+- [Scripts](#scripts)  
 - [Notes](#notes)  
 - [License](#license)
 
@@ -18,12 +19,12 @@ A PowerShell script to **install or remove Chocolatey** on Windows. It handles e
 
 ## Features
 
-- Install Chocolatey in a custom path (`C:\ProgramData\Chocolatey` by default).  
-- Remove Chocolatey along with environment variables and profile changes.  
-- Restores PowerShell profile to its previous state.  
-- Provides clear, colored status messages (✔, ❌, ⚠, ℹ).  
-- Checks for administrator permissions before installing.  
-- Detects existing Chocolatey installations and optionally reinstalls.  
+- Install or remove Chocolatey.  
+- Export installed Chocolatey packages (with or without version info).  
+- Import Chocolatey packages from a saved list.  
+- Delete all installed Chocolatey packages.  
+- Install a set of standard programs via Chocolatey.  
+- Clear status messages and logging for all actions.
 
 ---
 
@@ -31,8 +32,8 @@ A PowerShell script to **install or remove Chocolatey** on Windows. It handles e
 
 - Windows 7 or later  
 - PowerShell 5.1+  
-- Internet connection (for Chocolatey installer script)  
-- Administrator privileges for installation  
+- Administrator privileges for installation and package management  
+- Internet connection
 
 ---
 
@@ -40,61 +41,70 @@ A PowerShell script to **install or remove Chocolatey** on Windows. It handles e
 
 1. Clone or download this repository.  
 2. Open **PowerShell as Administrator**.  
-3. Run the script:
+3. Run the desired script:
 
 ```powershell
+# To install or remove Chocolatey
 .\choco-install-remove.ps1
-```
 
-> The script will prompt you to select **Install** or **Remove** if no action parameter is provided.
+# To manage Chocolatey packages
+.\choco-manager.ps1
+```
 
 ---
 
 ## Usage
 
-### Using Parameters
+### `choco-install-remove.ps1`
 
+- Install Chocolatey:
 ```powershell
-# Install Chocolatey
 .\choco-install-remove.ps1 -Action install
-
-# Remove Chocolatey
+```
+- Remove Chocolatey:
+```powershell
 .\choco-install-remove.ps1 -Action remove
 ```
 
-### Interactive Mode
+### `choco-manager.ps1`
 
-Running the script without parameters will prompt:
-
+- Export installed packages:
+```powershell
+.\choco-manager.ps1 -Action export            # without version
+.\choco-manager.ps1 -Action export -IncludeVersion  # with version info
 ```
-Choose an action:
-1) Install Chocolatey
-2) Remove Chocolatey
-Enter choice (1 or 2):
+- Import packages from a previously exported list:
+```powershell
+.\choco-manager.ps1 -Action import
+```
+- Delete all installed Chocolatey packages:
+```powershell
+.\choco-manager.ps1 -Action delete
+```
+- Install standard programs:
+```powershell
+.\choco-manager.ps1 -Action install-standard
 ```
 
 ---
 
-## Functions Overview
+## Scripts Overview
 
-| Function | Description |
-|----------|-------------|
-| `Write-Status` | Displays colored messages with symbols for status (OK, ERROR, WARN, INFO). |
-| `Test-IsAdmin` | Checks if the script is running with administrator privileges. |
-| `Remove-Folder` | Deletes a folder and all its contents safely. |
-| `Remove-EnvVariable` | Removes environment variables at Process, User, and Machine scopes. |
-| `Restore-ProfileChanges` | Restores PowerShell profile modifications saved by previous installs. |
-| `Save-ProfileDiff` | Saves differences between the original and updated PowerShell profile. |
-| `Remove-Choco` | Removes Chocolatey, environment variables, and restores profile changes. |
-| `Install-Choco` | Installs Chocolatey, updates environment variables, and saves profile changes. |
+| Script | Description |
+|--------|-------------|
+| `choco-install-remove.ps1` | Installs or removes Chocolatey and restores PowerShell profile changes. |
+| `choco-manager.ps1` | Exports, imports, deletes Chocolatey packages, and installs standard programs. |
+| `install-standard-programs.ps1` | Installs a predefined list of standard programs via Chocolatey. |
+| `backup-restore-packages.ps1` | Exports and restores installed Chocolatey and Scoop packages. |
 
 ---
 
 ## Notes
 
-- The script modifies `$PROFILE` and environment variables. Backup your profile if necessary.  
-- Chocolatey will be installed at: `C:\ProgramData\Chocolatey` (default). Change `$installPath` in the script if needed.  
-- Administrator privileges are required for installation but **not for removal**.  
+- Back up your PowerShell profile if necessary.  
+- Chocolatey will be installed at: `C:\ProgramData\Chocolatey` (default).  
+- Administrator privileges are required for installation but not for removal of Chocolatey.  
+- Standard programs installation requires `install-standard-programs.ps1` to exist in the same folder as `choco-manager.ps1`.
 
 ---
 
